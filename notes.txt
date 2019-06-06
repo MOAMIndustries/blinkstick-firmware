@@ -1,0 +1,41 @@
+There seems to be some form of state machine or scheduler?
+Looks like there is a task set. The task keeps being iterated through until a message is completely processed and passed off to another process.
+
+Operation Flow
+1 - Resets watchdog
+2 - Disconnectes then reconnects usb ~250ms?
+3 - Sets output Ports
+4 - Sets operation mode from eeprom?
+
+LED uint8_t array of max led size
+[0:2]   = PWM value for each of the three channels ~ 0-256
+[1]     - Red channel
+[0]     - Blue channel
+[2]     - Green Channel
+
+
+Reports - GET 0x01
+ID  -   
+1   -   LED MODE (for each channel)
+2   -   Info Block 1
+3   -   Info Block 2
+4   -   LED MODE 
+5   -   LED Data from Index
+6-9 -   Serial stream of device data
+
+Writes - SET 0x09
+ID  -
+1   - Set output colour in PWM mode, write 1st pixel in WS2812 Mode
+2   - Write Data to EEPROM? Related to 3 somehow
+3   - Write Data to EEPROM? Related to 2 somehow? Maybe one is a start and the other is continue? or second data frame?
+4   - Set device mode
+5   - Write new color value to a specific WS2812 pixel on a specific channel
+6-9 - 
+
+EEPROM Map
+[13]    - Mode Value
+
+
+Changes:
+*   added Get ID 10 - Return button state
+*   Modified Serial number from BSXXXXXX-1.0 format with a size of 12 bytes. To TVxxxxxxxxxxxxY-1.0 with a size of 19

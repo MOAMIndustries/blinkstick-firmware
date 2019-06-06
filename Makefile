@@ -14,7 +14,7 @@ DEVICE  = attiny85
 F_CPU   = 16500000
 FUSE_L  = 0xe1
 FUSE_H  = 0xdd
-AVRDUDE = avrdude -c usbtiny -P usb -p $(DEVICE) # edit this line for your programmer
+AVRDUDE = avrdude -c avrisp2 -P usb -p $(DEVICE) # edit this line for your programmer
 
 CFLAGS  = -Iusbdrv -I. -DDEBUG_LEVEL=0
 OBJECTS = usbdrv/usbdrv.o usbdrv/usbdrvasm.o usbdrv/oddebug.o light_ws2812.o main.o
@@ -41,8 +41,6 @@ program: flash fuse
 
 # rule for programming fuse bits:
 fuse:
-	@[ "$(FUSE_H)" != "" -a "$(FUSE_L)" != "" ] || \
-		{ echo "*** Edit Makefile and choose values for FUSE_L and FUSE_H!"; exit 1; }
 	$(AVRDUDE) -U hfuse:w:$(FUSE_H):m -U lfuse:w:$(FUSE_L):m
 
 # rule for uploading firmware:
@@ -106,6 +104,6 @@ cpp:
 	$(COMPILE) -E main.cpp
 
 increment:
-	ruby increment.rb
+	python increment.py
 
 deploy: program increment defaults
